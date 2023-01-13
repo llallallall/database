@@ -44,4 +44,25 @@ module.exports.setup = function (app, db) {
                         }
                 })
         })
+
+        app.get('/db/notification/:id',(req, res, next) => {
+                let result = {
+                        rsp : "fail",
+                }
+                db.get(
+                        `SELECT * FROM tbl_notification WHERE expiration > date('now') AND id > ${req.params.id} ORDER BY id desc`,
+                        (err, row) => {
+                                if (!err) {
+                                        result.rsp = !row ? "nodata" : "ok"
+                                        if (row) {
+                                                result.data = row
+                                        }
+                                        res.json(result)
+                                } else {
+                                        result.error = err.message
+                                        res.json(result)
+                                }
+                        }
+                )
+        })
 }

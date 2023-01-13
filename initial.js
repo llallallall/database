@@ -79,6 +79,21 @@ function fn_applications(db) {
         )
 }
 
+function fn_notification(db) {
+        db.run(
+                "CREATE TABLE IF NOT EXISTS tbl_notification (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT, expiration DATE, type TEXT)",
+                (err) => {
+                        if(!err) {
+                                let query = "DELETE FROM tbl_notification"
+                                db.run(query)
+                        }
+
+                        query = `INSERT INTO tbl_notification (content, expiration, type) VALUES ('공사중입니다.', '2023-12-31', 'warning')`
+                        db.run(query)
+                }
+        )
+}
+
 module.exports.run = function (db, type) {
         if (type == TYPE.about_me) {
                 fn_about_me(db)
@@ -86,5 +101,7 @@ module.exports.run = function (db, type) {
                 fn_resume(db)
         } else if ( type == TYPE.applications) {
                 fn_applications(db)
+        } else if ( type == TYPE.notification) {
+                fn_notification(db)
         }
 }
