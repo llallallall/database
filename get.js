@@ -37,7 +37,7 @@ module.exports.setup = function (app, db) {
                                 result.rsp = 'ok'
                                 result.data = rows
                                 res.json(result)
-                                console.log(`${rows[0].name}`)
+                                //console.log(`${rows[0].name}`)
                         } else {
                                 res.json(result)
                                 console.log('Error Query')
@@ -54,10 +54,10 @@ module.exports.setup = function (app, db) {
                         (err, row) => {
                                 if (!err) {
                                         result.rsp = !row ? "nodata" : "ok"
-                                        console.log(result)
+                                        //console.log(result)
                                         if (row) {
                                                 result.data = row
-                                                console.log(result)
+                                                //console.log(result)
                                         }
                                         res.json(result)
                                 } else {
@@ -66,5 +66,31 @@ module.exports.setup = function (app, db) {
                                 }
                         }
                 )
+        })
+
+        app.get('/db/blog', (req, res, next) => {
+                let result = {
+                        rsp : 'fail'
+                }
+                
+                db.all(`SELECT * FROM tbl_blog ORDER BY id desc`, (err, rows) => {
+                        if (!err) {
+                                result.rsp = 'ok'
+                                result.data = rows
+                                res.json(result)
+
+                                console.log(`/db/blog result : ${result}`)
+                                console.dir(result)
+                                
+                        } else {
+                                result.error = err.message
+                                res.json(result)
+
+                                console.log(`/db/blog result : ${result}`)
+                                console.dir(result)
+                        }
+                        
+                        
+                })
         })
 }

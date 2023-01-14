@@ -46,6 +46,7 @@ function fn_resume(db) {
 }
 
 function fn_applications(db) {
+        console.log('fn_applications')
         db.run('CREATE TABLE IF NOT EXISTS tbl_applications (id INT, name TEXT, content TEXT, date DATE, platform TEXT, url TEXT, image TEXT, UNIQUE(name, date))',
                 (err) => {
                         if (!err) {
@@ -80,6 +81,7 @@ function fn_applications(db) {
 }
 
 function fn_notification(db) {
+        console.log('fn_notification')
         db.run(
                 "CREATE TABLE IF NOT EXISTS tbl_notification (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT, expiration DATE, type TEXT)",
                 (err) => {
@@ -99,10 +101,10 @@ function fn_notification(db) {
                                 (err, row) => {
                                         if (!err) {
                                                 result.rsp = !row ? "nodata" : "ok"
-                                                console.log(result)
+                                                //console.log(result)
                                                 if (row) {
                                                         result.data = row
-                                                        console.log(result)
+                                                        //console.log(result)
                                                 }
                                                 
                                         } else {
@@ -115,6 +117,50 @@ function fn_notification(db) {
         )
 }
 
+
+function fn_blog(db) {
+        console.log('fn_blog')
+        db.run(
+                "CREATE TABLE IF NOT EXISTS tbl_blog (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date DATETIME DEFAULT (datetime('now', 'localtime')), post TEXT)", 
+                (err) => {
+                        
+                        if(!err) {
+
+                                query =`DELETE FROM tbl_blog`
+                                db.run(query)
+
+                                query1 =`INSERT INTO tbl_blog (title, post) VALUES ('sample blog test', '<p>contents<h2>body header</h2></p>')`
+                                db.run(query1)
+
+                                query2 =`INSERT INTO tbl_blog (title, post) VALUES ('꿈에 - 이정현', '<p>난 너무 가슴이 떨려요<h2>너무 좋아</h2></p>')`
+                                db.run(query2)
+
+                                let result = {
+                                        rsp : 'ok'
+                                }
+                                db.all(
+                                        `SELECT * FROM tbl_blog`,
+                                        (err2, rows) => {
+                                                if (!err2) {
+                                                        
+                                                        console.log(result)
+                                                        if (rows) {
+                                                                result.data = rows
+                                                                console.log(result)
+                                                        }
+                                                        
+                                                } else {
+                                                        result.error = err.message
+                                                        console.log(result)
+                                                }
+                                        }
+                                )
+                        }
+                }
+        )
+        
+}
+
 module.exports.run = function (db, type) {
         if (type == TYPE.about_me) {
                 fn_about_me(db)
@@ -122,7 +168,9 @@ module.exports.run = function (db, type) {
                 fn_resume(db)
         } else if ( type == TYPE.applications) {
                 fn_applications(db)
+        } else if ( type == TYPE.blog) {
+                fn_blog(db)
         } else if ( type == TYPE.notification) {
                 fn_notification(db)
-        }
+        } 
 }
