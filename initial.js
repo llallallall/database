@@ -90,6 +90,27 @@ function fn_notification(db) {
 
                         query = `INSERT INTO tbl_notification (content, expiration, type) VALUES ('공사중입니다.', '2023-12-31', 'warning')`
                         db.run(query)
+
+                        let result = {
+                                rsp : "fail",
+                        }
+                        db.get(
+                                `SELECT * FROM tbl_notification`,
+                                (err, row) => {
+                                        if (!err) {
+                                                result.rsp = !row ? "nodata" : "ok"
+                                                console.log(result)
+                                                if (row) {
+                                                        result.data = row
+                                                        console.log(result)
+                                                }
+                                                
+                                        } else {
+                                                result.error = err.message
+                                                
+                                        }
+                                }
+                        )
                 }
         )
 }

@@ -54,8 +54,10 @@ module.exports.setup = function (app, db) {
                         (err, row) => {
                                 if (!err) {
                                         result.rsp = !row ? "nodata" : "ok"
+                                        console.log(result)
                                         if (row) {
                                                 result.data = row
+                                                console.log(result)
                                         }
                                         res.json(result)
                                 } else {
