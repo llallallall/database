@@ -121,48 +121,48 @@ function fn_notification(db) {
 function fn_blog(db) {
         console.log('fn_blog')
         db.run(
-                "CREATE TABLE IF NOT EXISTS tbl_blog (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date DATETIME DEFAULT (datetime('now', 'localtime')), post TEXT)", 
-                (err) => {
+                "CREATE TABLE IF NOT EXISTS tbl_blog (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date DATETIME DEFAULT (datetime('now', 'localtime')), post TEXT, type TEXT DEFAULT 'html')", 
+                // (err) => {
                         
-                        if(!err) {
+                //         if(!err) {
 
-                                query =`DELETE FROM tbl_blog`
-                                db.run(query)
+                //                 query =`DELETE FROM tbl_blog`
+                //                 db.run(query)
 
-                                query1 =`INSERT INTO tbl_blog (title, post) VALUES ('sample blog test', '<p>contents<h2>body header</h2></p>')`
-                                db.run(query1)
-                                for (let i=0; i < 10 ; i ++) {
-                                query2 =`INSERT INTO tbl_blog (title, post) VALUES ('${i} 꿈에 - 이정현', '<p>난 너무 가슴이 떨려요<h2>너무 좋아</h2></p>')`
-                                db.run(query2)
-                                }
-                                let result = {
-                                        rsp : 'ok'
-                                }
-                                db.all(
-                                        `SELECT * FROM tbl_blog`,
-                                        (err2, rows) => {
-                                                if (!err2) {
+                //                 query1 =`INSERT INTO tbl_blog (title, post) VALUES ('sample blog test', '<p>contents<h2>body header</h2></p>')`
+                //                 db.run(query1)
+                //                 for (let i=0; i < 10 ; i ++) {
+                //                 query2 =`INSERT INTO tbl_blog (title, post) VALUES ('${i} 꿈에 - 이정현', '<p>난 너무 가슴이 떨려요<h2>너무 좋아</h2></p>')`
+                //                 db.run(query2)
+                //                 }
+                //                 let result = {
+                //                         rsp : 'ok'
+                //                 }
+                //                 db.all(
+                //                         `SELECT * FROM tbl_blog`,
+                //                         (err2, rows) => {
+                //                                 if (!err2) {
                                                         
-                                                        console.log(result)
-                                                        if (rows) {
-                                                                result.data = rows
-                                                                //console.log(result)
-                                                        }
+                //                                         console.log(result)
+                //                                         if (rows) {
+                //                                                 result.data = rows
+                //                                                 //console.log(result)
+                //                                         }
                                                         
-                                                } else {
-                                                        result.error = err.message
-                                                        //console.log(result)
-                                                }
-                                        }
-                                )
-                        }
-                }
+                //                                 } else {
+                //                                         result.error = err.message
+                //                                         //console.log(result)
+                //                                 }
+                //                         }
+                //                 )
+                //         }
+                // }
         )
         
 }
 
 function fn_accounts(db){
-        db.run('DROP TABLE IF EXISTS tbl_accounts')
+        //db.run('DROP TABLE IF EXISTS tbl_accounts')
 
         db.run(
                 "CREATE TABLE IF NOT EXISTS tbl_accounts (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, date DATETIME DEFAULT (datetime('now','localtime')), grade TEXT, token TEXT)",
