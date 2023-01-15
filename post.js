@@ -6,7 +6,7 @@ module.exports.setup = function (app, db) {
 
                 const token = 'T-'+Math.floor(Math.random() * 100000).toString()
                 db.get(
-                        `SELECT * FROM tbl)accounts WHERE email = '${req.params.email}'`,
+                        `SELECT * FROM tbl_accounts WHERE email = '${req.params.email}'`,
                         (err, row) => {
                                 if (!err) {
                                         if (!row) {
@@ -22,7 +22,7 @@ module.exports.setup = function (app, db) {
                                                         )
                                                         result.rsp = 'ok'
                                                         result.token = token
-                                                        rsp.json(result)
+                                                        res.json(result)
                                                 }
                                         } else {
                                                 result.rsp = 'no_email'
@@ -43,6 +43,33 @@ module.exports.setup = function (app, db) {
                                 if (!err && row) {
                                         result.rsp = 'ok'
                                         result.data = row['email']
+                                        res.json(result)
+                                } else {
+                                        res.json(result)
+                                }
+                        }
+                )
+        })
+
+        app.post('/db/blog', (req, res, next) => {
+                let result = {
+                        rsp : 'fail',
+                }
+                // console.log(' 3. post.js /db/blog')
+                // console.log('request params:', req.params);
+                // console.log('request body :', req.body);
+                console.log('request query :', req.query);
+
+
+                // let title = '제목'
+                // let content = '제목'
+                // let type = 'md'
+
+                db.run(
+                        `INSERT INTO tbl_blog (title, post, type) VALUES ('${req.query.title}','${req.query.content}','${req.query.type}')`,
+                        (err) => {
+                                if (!err) {
+                                        result.rsp = 'ok'
                                         res.json(result)
                                 } else {
                                         res.json(result)
