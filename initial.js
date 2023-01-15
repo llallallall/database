@@ -131,10 +131,10 @@ function fn_blog(db) {
 
                                 query1 =`INSERT INTO tbl_blog (title, post) VALUES ('sample blog test', '<p>contents<h2>body header</h2></p>')`
                                 db.run(query1)
-
-                                query2 =`INSERT INTO tbl_blog (title, post) VALUES ('꿈에 - 이정현', '<p>난 너무 가슴이 떨려요<h2>너무 좋아</h2></p>')`
+                                for (let i=0; i < 10 ; i ++) {
+                                query2 =`INSERT INTO tbl_blog (title, post) VALUES ('${i} 꿈에 - 이정현', '<p>난 너무 가슴이 떨려요<h2>너무 좋아</h2></p>')`
                                 db.run(query2)
-
+                                }
                                 let result = {
                                         rsp : 'ok'
                                 }
@@ -146,12 +146,12 @@ function fn_blog(db) {
                                                         console.log(result)
                                                         if (rows) {
                                                                 result.data = rows
-                                                                console.log(result)
+                                                                //console.log(result)
                                                         }
                                                         
                                                 } else {
                                                         result.error = err.message
-                                                        console.log(result)
+                                                        //console.log(result)
                                                 }
                                         }
                                 )
@@ -159,6 +159,20 @@ function fn_blog(db) {
                 }
         )
         
+}
+
+function fn_accounts(db){
+        db.run('DROP TABLE IF EXISTS tbl_accounts')
+
+        db.run(
+                "CREATE TABLE IF NOT EXISTS tbl_accounts (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, password TEXT, date DATETIME DEFAULT (datetime('now','localtime')), grade TEXT, token TEXT)",
+                (err) => {
+                        if (!err) {
+                                query = `INSERT OR IGNORE INTO tbl_accounts (id, email, password, grade, token) VALUES ( (SELECT id FROM tbl_accounts WHERE grade = 'owner'), 'vue', 'vue', 'owner', null)`
+                                db.run(query)
+                        }
+                }
+        )
 }
 
 module.exports.run = function (db, type) {
@@ -172,5 +186,8 @@ module.exports.run = function (db, type) {
                 fn_blog(db)
         } else if ( type == TYPE.notification) {
                 fn_notification(db)
+        } else if ( type == TYPE.accounts) {
+                fn_accounts(db)
         } 
 }
+
